@@ -1,0 +1,145 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-color: #f4f4f4;
+  color: #1c2a33;
+}
+
+.main-Conatiner {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.Header {
+  border-bottom: 1px solid #3fa7a7;
+  margin: 0 1em 1em;
+  padding: 0.5em 0.7em;
+  font-size: 2.2em;
+  color: #293f4d;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+  margin: 2em;
+  flex-wrap: wrap;
+}
+
+.login-box,
+.register-box {
+  flex: 1 1 300px;
+  background: white;
+  border-radius: 0.7em;
+  padding: 2em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-box h2,
+.register-box h2 {
+  margin-bottom: 1em;
+  color: #293f4d;
+}
+
+.Username,
+.Password {
+  width: 100%;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-radius: 0.5em;
+  border: 1px solid #ccc;
+  background-color: #f4f4f4;
+  outline: none;
+}
+
+.forgot {
+  display: block;
+  margin-bottom: 1em;
+  font-size: 0.9em;
+  color: #3fa7a7;
+  text-decoration: none;
+}
+
+.forgot:hover {
+  color: #ff6b6b;
+}
+
+.small-text {
+  margin-bottom: 5em;
+}
+
+.login-btn,
+.register-btn {
+  width: 100%;
+  padding: 1em;
+  border: none;
+  border-radius: 0.5em;
+  font-weight: bold;
+  color: white;
+  background-color: #3fa7a7;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-btn:hover,
+.register-btn:hover {
+  background-color: #ff6b6b;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  background-color: #293f4d;
+  color: #f4f4f4;
+  padding: 3em 4em;
+  flex-wrap: wrap;
+  gap: 2em;
+  margin-top: auto;
+}
+
+.footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer li {
+  margin-bottom: 0.8em;
+  transition: color 0.3s;
+}
+
+.footer li:hover {
+  color: #3fa7a7;
+}
+
+.footer .focus {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #ff6b6b;
+  margin-bottom: 1em;
+}
+
+.footer a {
+  color: #f4f4f4;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer a:hover {
+  color: #3fa7a7;
+}
+
+.Copywrite {
+  text-align: center;
+  background-color: #1c2a33;
+  color: #f4f4f4;
+  padding: 1.2em 0;
+  font-size: 0.9em;
+  border-top: 1px solid #3fa7a7;
+}
