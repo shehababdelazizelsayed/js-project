@@ -8,6 +8,7 @@
 body {
   background-color: #f4f4f4;
   color: #1c2a33;
+  overflow-x: hidden;
 }
 
 .main-Conatiner {
@@ -24,14 +25,14 @@ body {
   font-size: 2.2em;
 }
 
-/* Cart Layout */
+
 .cart-container {
   padding: 1em 2em;
   color: #1c2a33;
   flex: 1;
 }
 
-/* Order Steps */
+
 .order-steps {
   display: flex;
   align-items: center;
@@ -72,14 +73,14 @@ body {
   font-weight: bold;
 }
 
-/* Cart Content */
+
 .cart-content {
   display: flex;
   gap: 2em;
   flex-wrap: wrap;
 }
 
-/* Cart Table */
+
 .cart-table {
   flex: 2;
   width: 100%;
@@ -118,7 +119,7 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Quantity Control */
+
 .quantity-control {
   display: flex;
   align-items: center;
@@ -169,7 +170,7 @@ body {
   font-weight: bold;
 }
 
-/* Sidebar */
+
 .cart-sidebar {
   flex: 1;
   display: flex;

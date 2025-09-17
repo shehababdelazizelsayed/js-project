@@ -35,7 +35,7 @@ if (cartBtn) {
   });
 }
 
-// ✅ define getCart
+
 function getCart() {
   return JSON.parse(localStorage.getItem("cart")) || [];
 }
@@ -55,5 +55,54 @@ function updateCartCount() {
   }
 }
 
-// ✅ run once on page load
+
 document.addEventListener("DOMContentLoaded", updateCartCount);
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.querySelector(
+    '#searchInput, .search-input, .searchbox, input[name="q"], input[type="search"], input.search'
+  );
+  const searchBtn = document.querySelector(
+    '#searchBtn, .search-btn, .search-icon, button[type="submit"], .btn-search'
+  );
+
+  function doSearch() {
+    if (!searchInput) return;
+    const q = (searchInput.value || "").trim();
+    if (!q) return;
+    const url = `category.html?search=${encodeURIComponent(q)}`;
+    window.location.href = url;
+  }
+
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const qParam = params.get("search");
+    if (qParam && searchInput) {
+      searchInput.value = qParam;
+    }
+  } catch (_) {}
+
+  if (searchInput) {
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        doSearch();
+      }
+    });
+    const form = searchInput.closest("form");
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        doSearch();
+      });
+    }
+  }
+
+  if (searchBtn) {
+    searchBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      doSearch();
+    });
+  }
+});

@@ -23,16 +23,10 @@ shareButtons.forEach((btn) => {
       } catch (e) {}
       return;
     }
-
-    const encodedUrl = encodeURIComponent(url);
-    const encodedTitle = encodeURIComponent(title);
     let shareUrl = "";
-    if (network === "facebook")
-      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-    if (network === "twitter")
-      shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
-    if (network === "linkedin")
-      shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+    if (network === "facebook") shareUrl = `#`;
+    if (network === "twitter") shareUrl = `#`;
+    if (network === "linkedin") shareUrl = `#`;
     if (shareUrl) window.open(shareUrl, "_blank");
   });
 });

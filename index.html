@@ -9,7 +9,6 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-
   </head>
   <body>
     <div class="main-Conatiner">
@@ -45,9 +44,24 @@
               <i class="fa fa-user" style="font-size: 28px"></i>
             </button>
             <div class="profile-dropdown" id="profileDropdown">
-              <p class="profile-email">None</p><br />
+              <p class="profile-email">None</p>
+              <br />
               <a href="profile.html">My Profile</a><br />
-              <button id="logoutBtn" style="background:none;border:none;color:#1c2a33;cursor:pointer;padding:0;margin:0;text-align:center;width:100%">Logout</button>
+              <button
+                id="logoutBtn"
+                style="
+                  background: none;
+                  border: none;
+                  color: #1c2a33;
+                  cursor: pointer;
+                  padding: 0;
+                  margin: 0;
+                  text-align: center;
+                  width: 100%;
+                "
+              >
+                Logout
+              </button>
             </div>
           </div>
           <button
@@ -58,8 +72,7 @@
             id="cartBtn"
           >
             <i class="fa fa-shopping-cart" style="font-size: 22px"></i>
-              <span id="cartCount" class="cart-count">0</span>
-
+            <span id="cartCount" class="cart-count">0</span>
           </button>
         </div>
 
@@ -86,7 +99,7 @@
         <div class="catgories">
           <h2>Categories</h2>
           <ul>
-            <li><a href="category.html?cate=mother board">Mother board</a></li>
+            <li><a href="category.html?cate=mother board">Motherboard</a></li>
             <li><a href="category.html?cate=processor">CPU</a></li>
             <li><a href="category.html?cate=gpu">GPU</a></li>
             <li><a href="category.html?cate=ram">RAM</a></li>
@@ -148,7 +161,7 @@
       </div>
 
       <div class="carousel-wrapper" data-cate="mother board">
-        <h2 class="Text-mother">Mother boards</h2>
+        <h2 class="Text-mother">Motherboards</h2>
         <button class="scroll-btn left">
           <i class="fa fa-chevron-left"></i>
         </button>
@@ -257,6 +270,7 @@
         <button class="scroll-btn right">
           <i class="fa fa-chevron-right"></i>
         </button>
+      </div>
       <div class="footer">
         <div class="feet-contact">
           <ul class="foot-contact">
@@ -268,7 +282,7 @@
         <div class="feet-tags">
           <ul class="foot-tags">
             <li class="focus">Tags</li>
-            <li>Mother board</li>
+            <li>Motherboard</li>
             <li>CPU</li>
             <li>GPU</li>
             <li>RAM</li>
@@ -279,38 +293,40 @@
         </div>
         <div class="feet-pages">
           <ul class="foot-pages">
-            <li class="focus">pages</li>
+            <li class="focus">Pages</li>
             <li><a href="#">Feedback</a></li>
             <li><a href="#">About</a></li>
           </ul>
         </div>
       </div>
 
-      <div class="Copywrite">&copy; 2025 Team 0. All rights reserved.</div>
+      <footer class="Copywrite">
+        &copy; 2025 Team 0. All rights reserved.
+      </footer>
     </div>
 
-    <script  src="index.js"></script>
+    <script src="topbar_js.js"></script>
+    <script src="index.js"></script>
     <script type="module">
-function getCart() {
-  return JSON.parse(localStorage.getItem("cart")) || [];
-}
+      function getCart() {
+        return JSON.parse(localStorage.getItem("cart")) || [];
+      }
 
-function updateCartCount() {
-  const cart = getCart();
-  const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const cartCountElem = document.getElementById("cartCount");
+      function updateCartCount() {
+        const cart = getCart();
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCountElem = document.getElementById("cartCount");
 
-  if (cartCountElem) {
-    if (count > 0) {
-      cartCountElem.textContent = count;
-      cartCountElem.style.display = "inline-block";
-    } else {
-      cartCountElem.style.display = "none";
-    }
-  }
-}
+        if (cartCountElem) {
+          if (count > 0) {
+            cartCountElem.textContent = count;
+            cartCountElem.style.display = "inline-block";
+          } else {
+            cartCountElem.style.display = "none";
+          }
+        }
+      }
       document.addEventListener("DOMContentLoaded", () => {
-        // Logout button
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
           logoutBtn.addEventListener("click", async () => {
@@ -318,15 +334,16 @@ function updateCartCount() {
               await auth.signOut();
               window.location.href = "login.html";
             } catch (err) {
-              alert("Error signing out: " + err.message);
+              console.error("Error signing out:", err);
             }
           });
         }
 
-
         document.addEventListener("click", function (event) {
           if (!event.target.closest(".profile-wrapper")) {
-            document.getElementById("profileDropdown").classList.remove("active");
+            document
+              .getElementById("profileDropdown")
+              .classList.remove("active");
           }
         });
       });
@@ -338,9 +355,11 @@ function updateCartCount() {
         collection,
         getDocs,
       } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-      // Firebase config
       const firebaseConfig = {
         apiKey: "AIzaSyD9ghRnC-TMJ-TV6TJxdGH_7qgRsT6Po04",
         authDomain: "project-d6110.firebaseapp.com",
@@ -351,7 +370,6 @@ function updateCartCount() {
         measurementId: "G-0ZLPYLVJ4Y",
       };
 
-      // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
       const db = getFirestore(app);
@@ -372,8 +390,6 @@ function updateCartCount() {
         }
       }
 
-
-      // Firebase Auth
       const auth = getAuth(app);
       let currentUser = null;
       onAuthStateChanged(auth, (user) => {
@@ -381,62 +397,76 @@ function updateCartCount() {
         updateProfileDropdown(user);
       });
 
-      document.getElementById("profileBtn").addEventListener("click", function (e) {
-        if (!currentUser) {
-          window.location.href = "login.html";
-        } else {
-          e.stopPropagation();
-          document.getElementById("profileDropdown").classList.toggle("active");
-        }
-      });
+      document
+        .getElementById("profileBtn")
+        .addEventListener("click", function (e) {
+          if (!currentUser) {
+            window.location.href = "login.html";
+          } else {
+            e.stopPropagation();
+            document
+              .getElementById("profileDropdown")
+              .classList.toggle("active");
+          }
+        });
 
-function createProductCard(product) {
-  const card = document.createElement("div");
-  card.classList.add("mother-cards");
-  card.innerHTML = `
+      function createProductCard(product) {
+        const card = document.createElement("div");
+        card.classList.add("mother-cards");
+        card.innerHTML = `
     <div class="mother-image">
       <img src="${product.image || "./Assets/1.jpg"}" class="theimage" alt="${
-        product.Name || product.name
-      }" />
+          product.Name || product.name
+        }" />
     </div>
     <div class="brand">${product.brand || ""}</div>
     <div class="description">${product.Name || product.name}</div>
     <div class="price">${
       product.price ? product.price.toLocaleString() : ""
     } EGP</div>
-    <div class="add-tocart">
-      <button class="cli-addcart">Add to cart</button>
+    <div class="actions-row">
+      <div class="add-tocart">
+        <button class="cli-addcart">Add to cart</button>
+      </div>
+      <div class="view-product">
+        <button class="cli-view">View product</button>
+      </div>
     </div>
   `;
 
-  // ✅ Add to cart functionality
-  const addBtn = card.querySelector(".cli-addcart");
-  addBtn.addEventListener("click", () => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const addBtn = card.querySelector(".cli-addcart");
+        addBtn.addEventListener("click", () => {
+          let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    // check if product already exists
-    const existing = cart.find((item) => item.id === product.id);
-    if (existing) {
-      existing.quantity += 1;
-    } else {
-      cart.push({
-        id: product.id,
-        name: product.Name || product.name,
-        brand: product.brand || "",
-        price: product.price || 0,
-        image: product.image || "./Assets/1.jpg",
-        quantity: 1,
-      });
-    }
+          const existing = cart.find((item) => item.id === product.id);
+          if (existing) {
+            existing.quantity += 1;
+          } else {
+            cart.push({
+              id: product.id,
+              name: product.Name || product.name,
+              brand: product.brand || "",
+              price: product.price || 0,
+              image: product.image || "./Assets/1.jpg",
+              quantity: 1,
+            });
+          }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartCount();
+          localStorage.setItem("cart", JSON.stringify(cart));
+          updateCartCount();
 
-    alert(`${product.Name || product.name} added to cart!`);
-  });
+          console.log(`${product.Name || product.name} added to cart`);
+        });
 
-  return card;
-}
+        const viewBtn = card.querySelector(".cli-view");
+        if (viewBtn) {
+          viewBtn.addEventListener("click", () => {
+            window.location.href = `product.html?id=${product.id}`;
+          });
+        }
+
+        return card;
+      }
 
       function setupScrollButtons() {
         document.querySelectorAll(".carousel-wrapper").forEach((wrapper) => {
@@ -446,10 +476,9 @@ function createProductCard(product) {
 
           if (!container || !leftBtn || !rightBtn) return;
 
-          // figure out card width after products are added
           const card = container.querySelector(".mother-cards");
           const cardWidth = card ? card.offsetWidth : container.offsetWidth / 3;
-          const gap = 16; // match your CSS gap value
+          const gap = 16;
 
           rightBtn.addEventListener("click", () => {
             container.scrollBy({ left: cardWidth + gap, behavior: "smooth" });
@@ -472,33 +501,87 @@ function createProductCard(product) {
             products.push({ id: doc.id, ...doc.data() });
           });
 
-          // clear all product containers first
-          document
-            .querySelectorAll(".Mother-boards")
-            .forEach((c) => (c.innerHTML = ""));
+          const params = new URLSearchParams(window.location.search);
+          const q = (params.get("search") || "").trim().toLowerCase();
 
-          // append each product in correct wrapper
-          products.forEach((product) => {
-            const category = product.cate?.toLowerCase(); // e.g. "cpu", "gpu"
-            const container = document.querySelector(
-              `.carousel-wrapper[data-cate="${category}"] .Mother-boards`
+          if (q) {
+            const searchInput = document.querySelector(
+              '.searchbox, .search-input, input[name="q"], input[type="search"]'
             );
-            if (container) {
-              const card = createProductCard(product);
-              container.appendChild(card);
+            if (searchInput) searchInput.value = params.get("search");
+
+            const filtered = products.filter((p) => {
+              const name = (p.Name || p.name || "").toLowerCase();
+              const brand = (p.brand || "").toLowerCase();
+              const cate = (p.cate || p.category || "").toLowerCase();
+              const desc = (p.description || "").toLowerCase();
+              return (
+                name.includes(q) ||
+                brand.includes(q) ||
+                cate.includes(q) ||
+                desc.includes(q)
+              );
+            });
+
+            document
+              .querySelector(".slider")
+              ?.setAttribute("style", "display:none");
+            document
+              .querySelector(".catgories")
+              ?.setAttribute("style", "display:none");
+            document
+              .querySelectorAll(".carousel-wrapper")
+              .forEach((el) => el.setAttribute("style", "display:none"));
+
+            let results = document.querySelector(".search-results");
+            if (!results) {
+              results = document.createElement("main");
+              results.className = "search-results";
+              results.innerHTML = `
+                <h2 class="Text-mother">Search results</h2>
+                <div class="Mother-boards"></div>
+              `;
+              const insertBefore =
+                document.querySelector(".footer") ||
+                document.querySelector("footer.Copywrite");
+              document
+                .querySelector(".main-Conatiner")
+                .insertBefore(results, insertBefore);
             } else {
-              console.warn(
-                `No container found for category: ${category}`,
-                product
+              results.querySelector(".Mother-boards").innerHTML = "";
+            }
+
+            const container = results.querySelector(".Mother-boards");
+            if (filtered.length === 0) {
+              container.innerHTML = `<p>No products found.</p>`;
+            } else {
+              filtered.forEach((p) =>
+                container.appendChild(createProductCard(p))
               );
             }
-          });
+          } else {
+            document
+              .querySelectorAll(".Mother-boards")
+              .forEach((c) => (c.innerHTML = ""));
 
-          // ✅ setup scroll buttons AFTER products are inserted
-          setupScrollButtons();
-      
+            products.forEach((product) => {
+              const category = product.cate?.toLowerCase();
+              const container = document.querySelector(
+                `.carousel-wrapper[data-cate="${category}"] .Mother-boards`
+              );
+              if (container) {
+                const card = createProductCard(product);
+                container.appendChild(card);
+              } else {
+                console.warn(
+                  `No container found for category: ${category}`,
+                  product
+                );
+              }
+            });
 
-
+            setupScrollButtons();
+          }
         } catch (error) {
           console.error("Error loading products:", error);
         }
@@ -506,9 +589,7 @@ function createProductCard(product) {
 
       loadProducts();
 
-updateCartCount();
-
-      
+      updateCartCount();
     </script>
   </body>
 </html>

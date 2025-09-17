@@ -58,10 +58,10 @@ document.addEventListener("DOMContentLoaded", function () {
     showSlides((slideIndex = n));
   }
 
-  // Initialize slider
+  
   showSlides(slideIndex);
 
-  // Next/prev buttons
+  
   const prevBtn = document.querySelector(".prev");
   const nextBtn = document.querySelector(".next");
 
@@ -73,13 +73,13 @@ document.addEventListener("DOMContentLoaded", function () {
     nextBtn.addEventListener("click", () => plusSlides(1));
   }
 
-  // Dots
+  
   const dots = document.querySelectorAll(".dot");
   dots.forEach((dot, i) => {
     dot.addEventListener("click", () => currentSlide(i + 1));
   });
 
-  // Auto-slide every 5 seconds
+  
   setInterval(() => {
     showSlides(slideIndex + 1);
   }, 5000);

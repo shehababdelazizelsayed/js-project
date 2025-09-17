@@ -1,7 +1,3 @@
-html,
-body {
-  overflow-x: hidden;
-}
 * {
   margin: 0;
   padding: 0;
@@ -12,6 +8,7 @@ body {
 body {
   background-color: #f4f4f4;
   color: #1c2a33;
+  overflow-x: hidden;
 }
 
 .main-Conatiner {
@@ -29,11 +26,11 @@ body {
 }
 
 .checkout-box {
-  background: #ffffff; /* Light Gray card */
+  background: #ffffff; 
   padding: 1.5em;
   border-radius: 0.7em;
   margin: 0 1em 2em;
-  color: #1c2a33; /* Dark Charcoal text */
+  color: #1c2a33; 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid #e0e0e0;
 }
@@ -43,11 +40,11 @@ body {
   margin-bottom: 0;
   font-size: 1.1em;
   text-transform: uppercase;
-  background-color: #293f4d; /* Deep Blue-Gray header like table */
+  background-color: #293f4d; 
   padding: 0.9em 1.2em;
   border-top-left-radius: 0.7em;
   border-top-right-radius: 0.7em;
-  margin: -1.5em -1.5em 1em; /* Stretch header across card */
+  margin: -1.5em -1.5em 1em; 
 }
 
 .address-form input {
@@ -63,7 +60,7 @@ body {
 }
 
 .address-form input:focus {
-  border-color: #3fa7a7; /* Soft Teal */
+  border-color: #3fa7a7; 
   outline: none;
   box-shadow: 0 0 5px rgba(63, 167, 167, 0.35);
 }
@@ -72,7 +69,7 @@ body {
   display: none;
 }
 
-/* Table */
+
 .cart-table {
   width: 98%;
   border-collapse: collapse;
@@ -146,7 +143,7 @@ body {
   background-color: #e05555;
 }
 
-/* Totals */
+
 .totals-box {
   background: #293f4d;
   padding: 1.5em;
@@ -161,7 +158,7 @@ body {
   font-weight: bold;
 }
 
-/* Payment */
+
 .payment-methods {
   display: flex;
   gap: 1em;
@@ -192,7 +189,7 @@ body {
   font-weight: 600;
 }
 
-/* Comments */
+
 textarea {
   width: 100%;
   min-height: 120px;
@@ -208,7 +205,7 @@ textarea:focus {
   box-shadow: 0 0 5px rgba(63, 167, 167, 0.35);
 }
 
-/* Confirm Order */
+
 .confirm-order {
   text-align: center;
   margin: 2em 1em;

@@ -153,7 +153,6 @@
   } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-analytics.js";
 
-  // ✅ Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyD9ghRnC-TMJ-TV6TJxdGH_7qgRsT6Po04",
     authDomain: "project-d6110.firebaseapp.com",
@@ -164,13 +163,11 @@
     measurementId: "G-0ZLPYLVJ4Y",
   };
 
-  // ✅ Init Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const db = getFirestore(app);
   const auth = getAuth(app);
 
-  // 🔹 Profile dropdown updater
   function updateProfileDropdown(user) {
     const dropdown = document.getElementById("profileDropdown");
     if (!dropdown) return;
@@ -206,14 +203,12 @@
     }
   }
 
-  // 🔹 Auth state listener
   window.currentUser = null;
   onAuthStateChanged(auth, (user) => {
     window.currentUser = user;
     updateProfileDropdown(user);
   });
 
-  // 🔹 Logout button
   document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
@@ -222,12 +217,11 @@
           await signOut(auth);
           window.location.href = "login.html";
         } catch (err) {
-          alert("Error signing out: " + err.message);
+          console.error("Error signing out:", err);
         }
       });
     }
 
-    // Close dropdown on outside click
     document.addEventListener("click", function (event) {
       if (!event.target.closest(".profile-wrapper")) {
         const dd = document.getElementById("profileDropdown");
@@ -235,7 +229,6 @@
       }
     });
 
-    // Profile button
     const profileBtn = document.getElementById("profileBtn");
     if (profileBtn) {
       profileBtn.addEventListener("click", function (e) {
@@ -249,7 +242,6 @@
     }
   });
 
-  // 🔹 Login page logic (only runs if login elements exist)
   const loginBtn = document.querySelector(".login-btn");
   const emailInput = document.querySelector(".Username");
   const passwordInput = document.querySelector(".Password");
@@ -261,34 +253,27 @@
       const password = passwordInput.value;
 
       if (!email || !password) {
-        alert("⚠️ Please enter both email and password");
         return;
       }
 
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        alert("✅ Login successful! Welcome " + userCredential.user.email);
         window.location.href = "index.html";
       } catch (error) {
-        alert("❌ Error: " + error.message);
       }
     });
   }
 
-  // 🔹 Forgot password
   if (forgotLink && emailInput) {
     forgotLink.addEventListener("click", async (e) => {
       e.preventDefault();
       const email = emailInput.value.trim();
       if (!email) {
-        alert("⚠️ Please enter your email to reset password");
         return;
       }
       try {
         await sendPasswordResetEmail(auth, email);
-        alert("Password reset email sent to " + email);
       } catch (error) {
-        alert("Error: " + error.message);
       }
     });
   }

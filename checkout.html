@@ -141,7 +141,7 @@
         </tbody>
       </table>
 
-      <!-- Totals -->
+      
       <div class="totals-box">
         <p>Total product price: <span>$300</span></p>
         <p>Shipment: <span>$20</span></p>
@@ -150,7 +150,7 @@
         </p>
       </div>
 
-      <!-- Payment -->
+      
       <div class="checkout-box">
         <h2>Payment Method</h2>
         <form
@@ -175,18 +175,18 @@
         </form>
       </div>
 
-      <!-- Comments -->
+      
       <div class="checkout-box">
         <h2>Comments</h2>
         <textarea placeholder="Any notes about delivery..."></textarea>
       </div>
 
-      <!-- Confirm -->
+      
       <div class="confirm-order">
         <button class="confirm-btn">Confirm Order</button>
       </div>
 
-      <!-- Footer -->
+      
       <div class="footer">
         <div class="feet-contact">
           <ul class="foot-contact">
@@ -224,7 +224,6 @@
 
 
       document.addEventListener("DOMContentLoaded", () => {
-        // Logout button
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
           logoutBtn.addEventListener("click", async () => {
@@ -232,7 +231,7 @@
               await auth.signOut();
               window.location.href = "login.html";
             } catch (err) {
-              alert("Error signing out: " + err.message);
+              console.error("Error signing out:", err);
             }
           });
         }
@@ -254,7 +253,6 @@
       } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
       import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-      // Firebase config
       const firebaseConfig = {
         apiKey: "AIzaSyD9ghRnC-TMJ-TV6TJxdGH_7qgRsT6Po04",
         authDomain: "project-d6110.firebaseapp.com",
@@ -265,7 +263,6 @@
         measurementId: "G-0ZLPYLVJ4Y",
       };
 
-      // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
       const db = getFirestore(app);
@@ -284,7 +281,6 @@
           dropdown.querySelector("a[href='profile.html']").style.display = '';
           const logoutBtn = dropdown.querySelector("#logoutBtn");
           if (logoutBtn) logoutBtn.style.display = '';
-          // Remove login link if present
           if (dropdown.querySelector('.login-link')) {
             dropdown.querySelector('.login-link').remove();
           }
@@ -293,7 +289,6 @@
           dropdown.querySelector("a[href='profile.html']").style.display = 'none';
           const logoutBtn = dropdown.querySelector("#logoutBtn");
           if (logoutBtn) logoutBtn.style.display = 'none';
-          // Add login link if not present
           if (!dropdown.querySelector(".login-link")) {
             const loginLink = document.createElement('a');
             loginLink.href = 'login.html';
@@ -306,7 +301,6 @@
       }
 
 
-      // Firebase Auth
       const auth = getAuth(app);
       window.currentUser = null;
       onAuthStateChanged(auth, (user) => {

@@ -6,20 +6,20 @@ document.querySelector(".submit").addEventListener("click", function (e) {
   const confirmPassword = document.querySelector(".confirm-Password").value;
 
   if (newPassword !== confirmPassword) {
-    alert("New passwords do not match!");
+    console.warn("New passwords do not match!");
     return;
   }
 
   if (newPassword && newPassword.length < 6) {
-    alert("Password must be at least 6 characters long!");
+    console.warn("Password must be at least 6 characters long!");
     return;
   }
 
-  alert("Profile updated successfully!");
+  console.log("Profile updated successfully!");
 });
 
 document.querySelector(".vieworders").addEventListener("click", function () {
-  alert("Showing all orders functionality would go here");
+  console.log("Showing all orders functionality would go here");
 });
 
 document.querySelector(".Email").addEventListener("blur", function () {
@@ -28,7 +28,7 @@ document.querySelector(".Email").addEventListener("blur", function () {
 
   if (email && !emailPattern.test(email)) {
     this.style.borderColor = "#FF6B6B";
-    alert("Please enter a valid email address");
+    console.warn("Please enter a valid email address");
   } else {
     this.style.borderColor = "#e0e0e0";
   }

@@ -19,8 +19,7 @@
           src="./Assets/logo.jpg"
           class="logo"
           alt="Company Logo"
-                    onclick="window.location.href='index.html'"
-
+          onclick="window.location.href='index.html'"
         />
 
         <div class="search">
@@ -58,11 +57,9 @@
             aria-label="Go to cart"
             title="Cart"
             id="cartBtn"
-
           >
             <i class="fa fa-shopping-cart" style="font-size: 22px"></i>
-                          <span id="cartCount" class="cart-count">0</span>
-
+            <span id="cartCount" class="cart-count">0</span>
           </button>
         </div>
 
@@ -84,7 +81,6 @@
           </div>
         </div>
       </div>
-
 
       <h1 class="Header">Cart</h1>
 
@@ -110,8 +106,7 @@
               </tr>
             </thead>
             <tbody id="cartTableBody">
-              
-            </tbody >
+            </tbody>
           </table>
 
           <div class="cart-sidebar">
@@ -167,181 +162,168 @@
     </div>
     <script src="./cart.js"></script>
     <script src="./topbar_js.js"></script>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
-  import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  // === Firebase Config ===
-  const firebaseConfig = {
-    apiKey: "AIzaSyD9ghRnC-TMJ-TV6TJxdGH_7qgRsT6Po04",
-    authDomain: "project-d6110.firebaseapp.com",
-    projectId: "project-d6110",
-    storageBucket: "project-d6110.firebasestorage.app",
-    messagingSenderId: "402041654228",
-    appId: "1:402041654228:web:2430f53e2afb775e242441",
-    measurementId: "G-0ZLPYLVJ4Y",
-  };
+      const firebaseConfig = {
+        apiKey: "AIzaSyD9ghRnC-TMJ-TV6TJxdGH_7qgRsT6Po04",
+        authDomain: "project-d6110.firebaseapp.com",
+        projectId: "project-d6110",
+        storageBucket: "project-d6110.firebasestorage.app",
+        messagingSenderId: "402041654228",
+        appId: "1:402041654228:web:2430f53e2afb775e242441",
+        measurementId: "G-0ZLPYLVJ4Y",
+      };
 
-  // === Init Firebase ===
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
 
-  // === Auth & Profile Dropdown ===
-  function updateProfileDropdown(user) {
-    const dropdown = document.getElementById("profileDropdown");
-    if (!dropdown) return;
-    let emailElem = dropdown.querySelector(".profile-email");
-    if (!emailElem) {
-      emailElem = document.createElement("p");
-      emailElem.className = "profile-email";
-      dropdown.prepend(emailElem);
-    }
-
-    if (user && user.email) {
-      emailElem.textContent = user.email;
-      dropdown.querySelector("a[href='profile.html']").style.display = "";
-      const logoutBtn = dropdown.querySelector("#logoutBtn");
-      if (logoutBtn) logoutBtn.style.display = "";
-      if (dropdown.querySelector(".login-link")) {
-        dropdown.querySelector(".login-link").remove();
-      }
-    } else {
-      emailElem.textContent = "";
-      dropdown.querySelector("a[href='profile.html']").style.display = "none";
-      const logoutBtn = dropdown.querySelector("#logoutBtn");
-      if (logoutBtn) logoutBtn.style.display = "none";
-      if (!dropdown.querySelector(".login-link")) {
-        const loginLink = document.createElement("a");
-        loginLink.href = "login.html";
-        loginLink.textContent = "Login";
-        loginLink.className = "login-link";
-        loginLink.style.display = "block";
-        dropdown.appendChild(loginLink);
-      }
-    }
-  }
-
-  onAuthStateChanged(auth, (user) => {
-    window.currentUser = user;
-    updateProfileDropdown(user);
-  });
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", async () => {
-        try {
-          await auth.signOut();
-          window.location.href = "login.html";
-        } catch (err) {
-          alert("Error signing out: " + err.message);
+      function updateProfileDropdown(user) {
+        const dropdown = document.getElementById("profileDropdown");
+        if (!dropdown) return;
+        let emailElem = dropdown.querySelector(".profile-email");
+        if (!emailElem) {
+          emailElem = document.createElement("p");
+          emailElem.className = "profile-email";
+          dropdown.prepend(emailElem);
         }
-      });
-    }
 
-    document.getElementById("profileBtn").addEventListener("click", function (e) {
-      if (!window.currentUser) {
-        window.location.href = "login.html";
-        return;
-      }
-      e.stopPropagation();
-      document.getElementById("profileDropdown").classList.toggle("active");
-    });
-
-    document.addEventListener("click", function (event) {
-      if (!event.target.closest(".profile-wrapper")) {
-        document.getElementById("profileDropdown").classList.remove("active");
-      }
-    });
-
-    // === CART LOGIC ===
-    function getCart() {
-      return JSON.parse(localStorage.getItem("cart")) || [];
-    }
-
-    function saveCart(cart) {
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
-
-    function renderCart() {
-      const cart = getCart();
-      const tbody = document.getElementById("cartTableBody");
-      tbody.innerHTML = ""; // clear old rows
-
-      let fullTotal = 0;
-
-      cart.forEach((item, index) => {
-        const totalPrice = item.price * item.quantity;
-        fullTotal += totalPrice;
-
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td><img src="${item.image}" alt="${item.name}" width="60"/></td>
-          <td>${item.name}</td>
-          <td>${item.brand || "-"}</td>
-          <td>
-            <div class="quantity-control">
-              <button class="decrease">-</button>
-              <input type="text" value="${item.quantity}" readonly />
-              <button class="increase">+</button>
-              <button class="delete-btn">Delete</button>
-            </div>
-          </td>
-          <td>${item.price} EGP</td>
-          <td>${totalPrice} EGP</td>
-        `;
-
-        // Quantity decrease
-        row.querySelector(".decrease").addEventListener("click", () => {
-          if (item.quantity > 1) {
-            item.quantity--;
-          } else {
-            cart.splice(index, 1); // remove item
+        if (user && user.email) {
+          emailElem.textContent = user.email;
+          dropdown.querySelector("a[href='profile.html']").style.display = "";
+          const logoutBtn = dropdown.querySelector("#logoutBtn");
+          if (logoutBtn) logoutBtn.style.display = "";
+          if (dropdown.querySelector(".login-link")) {
+            dropdown.querySelector(".login-link").remove();
           }
-          saveCart(cart);
-          renderCart();
-        });
+        } else {
+          emailElem.textContent = "";
+          dropdown.querySelector("a[href='profile.html']").style.display = "none";
+          const logoutBtn = dropdown.querySelector("#logoutBtn");
+          if (logoutBtn) logoutBtn.style.display = "none";
+          if (!dropdown.querySelector(".login-link")) {
+            const loginLink = document.createElement("a");
+            loginLink.href = "login.html";
+            loginLink.textContent = "Login";
+            loginLink.className = "login-link";
+            loginLink.style.display = "block";
+            dropdown.appendChild(loginLink);
+          }
+        }
+      }
 
-        // Quantity increase
-        row.querySelector(".increase").addEventListener("click", () => {
-          item.quantity++;
-          saveCart(cart);
-          renderCart();
-        });
-
-        // Delete item
-        row.querySelector(".delete-btn").addEventListener("click", () => {
-          cart.splice(index, 1);
-          saveCart(cart);
-          renderCart();
-        });
-
-        tbody.appendChild(row);
+      onAuthStateChanged(auth, (user) => {
+        window.currentUser = user;
+        updateProfileDropdown(user);
       });
 
-      // Update totals in sidebar
-      const totalBox = document.querySelector(".checkout-box");
-      if (totalBox) {
-        totalBox.querySelector("p span").textContent = `${fullTotal} EGP`;
-        totalBox.querySelector("strong span").textContent = `${fullTotal} EGP`;
-  // Store the final total in localStorage (always overwrite)
-  localStorage.setItem("finalTotal", fullTotal);
-      }
+      document.addEventListener("DOMContentLoaded", () => {
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", async () => {
+            try {
+              await auth.signOut();
+              window.location.href = "login.html";
+            } catch (err) {
+              console.error("Error signing out:", err);
+            }
+          });
+        }
 
-      // Update cart count badge (from shared topbar_js.js if available)
-      if (typeof updateCartCount === "function") {
-        updateCartCount();
-      }
-    }
+        document.getElementById("profileBtn").addEventListener("click", function (e) {
+          if (!window.currentUser) {
+            window.location.href = "login.html";
+            return;
+          }
+          e.stopPropagation();
+          document.getElementById("profileDropdown").classList.toggle("active");
+        });
 
-    renderCart();
-  });
-</script>
+        document.addEventListener("click", function (event) {
+          if (!event.target.closest(".profile-wrapper")) {
+            document.getElementById("profileDropdown").classList.remove("active");
+          }
+        });
 
+        function getCart() {
+          return JSON.parse(localStorage.getItem("cart")) || [];
+        }
 
+        function saveCart(cart) {
+          localStorage.setItem("cart", JSON.stringify(cart));
+        }
+
+        function renderCart() {
+          const cart = getCart();
+          const tbody = document.getElementById("cartTableBody");
+          tbody.innerHTML = ""; 
+          let fullTotal = 0;
+
+          cart.forEach((item, index) => {
+            const totalPrice = item.price * item.quantity;
+            fullTotal += totalPrice;
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td><img src="${item.image}" alt="${item.name}" width="60"/></td>
+              <td>${item.name}</td>
+              <td>${item.brand || "-"}</td>
+              <td>
+                <div class="quantity-control">
+                  <button class="decrease">-</button>
+                  <input type="text" value="${item.quantity}" readonly />
+                  <button class="increase">+</button>
+                  <button class="delete-btn">Delete</button>
+                </div>
+              </td>
+              <td>${item.price} EGP</td>
+              <td>${totalPrice} EGP</td>
+            `;
+
+            row.querySelector(".decrease").addEventListener("click", () => {
+              if (item.quantity > 1) {
+                item.quantity--;
+              } else {
+                cart.splice(index, 1);
+              }
+              saveCart(cart);
+              renderCart();
+            });
+
+            row.querySelector(".increase").addEventListener("click", () => {
+              item.quantity++;
+              saveCart(cart);
+              renderCart();
+            });
+
+            row.querySelector(".delete-btn").addEventListener("click", () => {
+              cart.splice(index, 1);
+              saveCart(cart);
+              renderCart();
+            });
+
+            tbody.appendChild(row);
+          });
+
+          const totalBox = document.querySelector(".checkout-box");
+          if (totalBox) {
+            totalBox.querySelector("p span").textContent = `${fullTotal} EGP`;
+            totalBox.querySelector("strong span").textContent = `${fullTotal} EGP`;
+            localStorage.setItem("finalTotal", fullTotal);
+          }
+
+          if (typeof updateCartCount === "function") {
+            updateCartCount();
+          }
+        }
+
+        renderCart();
+      });
+    </script>
   </body>
 </html>

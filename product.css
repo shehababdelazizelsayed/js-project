@@ -8,6 +8,7 @@
 body {
   background-color: #f4f4f4;
   color: #1c2a33;
+  overflow-x: hidden;
 }
 
 .main-Conatiner {
@@ -246,6 +247,30 @@ body {
 
 .specs tr:hover {
   background: rgba(63, 167, 167, 0.05);
+}
+
+.add-tocart {
+  display: relative;
+  justify-content: center;
+  margin: 0.5em 0 1.5em;
+}
+
+.add-tocart button {
+  padding: 0.8em 1.5em;
+  border: none;
+  background-color: #3fa7a7;
+  color: white;
+  border-radius: 0.5em;
+  cursor: pointer;
+  width: 80%;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.add-tocart button:hover {
+  background-color: #ff6b6b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .footer {

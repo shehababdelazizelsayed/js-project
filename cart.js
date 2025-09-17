@@ -26,14 +26,14 @@ document.addEventListener("click", function (e) {
   if (e.target.tagName === "BUTTON") {
     const btn = e.target;
 
-    // Quantity plus
+    
     if (btn.textContent === "+") {
       const input = btn.parentElement.querySelector("input");
       input.value = parseInt(input.value) + 1;
       updateCartTotals();
     }
 
-    // Quantity minus
+    
     if (btn.textContent === "-") {
       const input = btn.parentElement.querySelector("input");
       const newVal = parseInt(input.value) - 1;
@@ -41,7 +41,7 @@ document.addEventListener("click", function (e) {
       updateCartTotals();
     }
 
-    // Delete row
+    
     if (btn.classList.contains("delete-btn")) {
       btn.closest("tr").remove();
       updateCartTotals();

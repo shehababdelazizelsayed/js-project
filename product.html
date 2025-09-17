@@ -84,86 +84,39 @@
       </div>
 
       
+      
       <div class="product-header">
         <h1 class="Header">Product</h1>
-        <h2 class="Name">ASUS ROG Strix B760-A</h2>
+        <h2 class="Name"></h2>
       </div>
-
       <div class="product-layout">
         <div class="gallery">
-          <img src="./Assets/1.jpg" alt="Product image" />
+          <img src="" alt="Product image" />
         </div>
-
         <div class="summary">
-          <div class="price-row"><span class="label">Price:</span><span class="value">12,000 EGP</span></div>
-          <div class="price-row"><span class="label">In Stock:</span><span class="value ok">Yes</span></div>
-          <div class="price-row"><span class="label">Brand:</span><span class="value">ASUS</span></div>
-          <div class="price-row"><span class="label">Model:</span><span class="value">B760-A</span></div>
-
+          <div class="price-row"><span class="label">Price:</span><span class="value"></span></div>
+          <div class="price-row"><span class="label">In Stock:</span><span class="value ok"></span></div>
+          <div class="price-row"><span class="label">Brand:</span><span class="value"></span></div>
+          <div class="price-row"><span class="label">Model:</span><span class="value"></span></div>
           <div class="share-box">
             <button class="share-btn" data-network="facebook"><i class="fa fa-facebook"></i></button>
             <button class="share-btn" data-network="twitter"><i class="fa fa-twitter"></i></button>
             <button class="share-btn" data-network="linkedin"><i class="fa fa-linkedin"></i></button>
             <button class="share-btn" data-network="copy"><i class="fa fa-link"></i></button>
           </div>
-
-          <div class="tags">
-            <span class="tag">ATX</span>
-            <span class="tag">DDR5</span>
-            <span class="tag">PCIe 5.0</span>
+          <div class="tags"></div>
+          <div class="add-tocart">
+            <button class="cli-addcart">Add to cart</button>
           </div>
         </div>
-
         <aside class="related">
           <h4>Products from the same category</h4>
-          <div class="related-list">
-            <a href="#" class="related-item">
-              <div class="thumb"><img src="./Assets/2.png" alt="thumb" /></div>
-              <div class="meta">
-                <div class="r-name">MSI MAG B760</div>
-                <div class="r-price">11,500 EGP</div>
-              </div>
-            </a>
-            <a href="#" class="related-item">
-              <div class="thumb"><img src="./Assets/3.jpg" alt="thumb" /></div>
-              <div class="meta">
-                <div class="r-name">Gigabyte Z790 Elite</div>
-                <div class="r-price">14,900 EGP</div>
-              </div>
-            </a>
-            <a href="#" class="related-item">
-              <div class="thumb"><img src="./Assets/4.png" alt="thumb" /></div>
-              <div class="meta">
-                <div class="r-name">ASRock B760 Pro</div>
-                <div class="r-price">10,800 EGP</div>
-              </div>
-            </a>
-          </div>
+          <div class="related-list"></div>
         </aside>
       </div>
-
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="desc">Description</button>
-        <button class="tab-btn" data-tab="reviews">Reviews</button>
-      </div>
-
       <div class="tab-panels">
-        <div class="tab-panel active" id="desc">
-          <table class="specs">
-            <thead>
-              <tr><th>Model</th><th>Description</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>CPU</td><td>Intel 12th/13th Gen support, LGA1700</td></tr>
-              <tr><td>GPU</td><td>PCIe 5.0 x16 slot, reinforced</td></tr>
-              <tr><td>Memory</td><td>4x DDR5 DIMM, up to 128GB</td></tr>
-              <tr><td>Storage</td><td>3x M.2 NVMe, 4x SATA</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="tab-panel" id="reviews">
+        <div class="tab-panel active" id="reviews">
           <div class="reviews">
-            <p>No reviews yet. Be the first to write one!</n></p>
           </div>
         </div>
       </div>
@@ -203,9 +156,95 @@
     <script src="main.js"></script>
         <script src="./topbar_js.js"></script>
         <script type="module">
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+function getProductIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
+}
+
+async function loadProduct() {
+  const productId = getProductIdFromUrl();
+  if (!productId) return;
+  try {
+    const productRef = doc(db, "products", productId);
+    const productSnap = await getDoc(productRef);
+    if (!productSnap.exists()) return;
+    const product = productSnap.data();
+
+    const nameElem = document.querySelector(".Name");
+    if (nameElem) nameElem.textContent = product.Name || product.name || "Product";
+
+    const imgElem = document.querySelector(".gallery img");
+    if (imgElem) imgElem.src = product.image || "./Assets/1.jpg";
+
+
+  const priceElem = document.querySelector('.summary .price-row:nth-child(1) .value');
+  if (priceElem) priceElem.textContent = (product.price ? product.price.toLocaleString() : "-") + " EGP";
+
+  const inStockElem = document.querySelector('.summary .price-row:nth-child(2) .value.ok');
+  if (inStockElem) {
+    let inStock = product.instock;
+    if (inStock === undefined) inStock = product.instack;
+    if (typeof inStock === 'boolean') {
+      inStockElem.textContent = inStock ? 'Yes' : 'No';
+      inStockElem.classList.toggle('ok', inStock);
+      inStockElem.classList.toggle('no', !inStock);
+    } else if (typeof inStock === 'string') {
+      inStockElem.textContent = inStock.toLowerCase() === 'true' ? 'Yes' : 'No';
+      inStockElem.classList.toggle('ok', inStock.toLowerCase() === 'true');
+      inStockElem.classList.toggle('no', inStock.toLowerCase() !== 'true');
+    } else {
+      inStockElem.textContent = inStock ? 'Yes' : 'No';
+    }
+  }
+
+  const brandElem = document.querySelector('.summary .price-row:nth-child(3) .value');
+  if (brandElem) brandElem.textContent = product.brand || "-";
+
+  const modelElem = document.querySelector('.summary .price-row:nth-child(4) .value');
+  if (modelElem) modelElem.textContent = product.model || "-";
+
+    const tagsElem = document.querySelector(".tags");
+    if (tagsElem && product.tags && Array.isArray(product.tags)) {
+      tagsElem.innerHTML = product.tags.map(tag => `<span class="tag">${tag}</span>`).join("");
+    }
+
+    if (product.cate) {
+      const relList = document.querySelector('.related-list');
+      if (relList) {
+        relList.innerHTML = '';
+        const allProducts = await getDocs(collection(db, "products"));
+        allProducts.forEach((docSnap) => {
+          if (docSnap.id === productId) return; 
+          const rel = docSnap.data();
+          const relCate = (rel.cate || rel.category || '').toLowerCase();
+          const prodCate = product.cate.toLowerCase();
+          if (relCate === prodCate) {
+            const relItem = document.createElement('a');
+            relItem.className = 'related-item';
+            relItem.href = `product.html?id=${docSnap.id}`;
+            relItem.innerHTML = `
+              <div class="thumb"><img src="${rel.image || './Assets/1.jpg'}" alt="thumb" /></div>
+              <div class="meta">
+                <div class="r-name">${rel.Name || rel.name || ''}</div>
+                <div class="r-price">${rel.price ? rel.price.toLocaleString() + ' EGP' : ''}</div>
+              </div>
+            `;
+            relList.appendChild(relItem);
+          }
+        });
+      }
+    }
+
+  } catch (err) {
+    console.error("Error loading product:", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadProduct);
 
       document.addEventListener("DOMContentLoaded", () => {
-        // Logout button
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
           logoutBtn.addEventListener("click", async () => {
@@ -213,7 +252,7 @@
               await auth.signOut();
               window.location.href = "login.html";
             } catch (err) {
-              alert("Error signing out: " + err.message);
+              console.error("Error signing out:", err);
             }
           });
         }
@@ -235,7 +274,6 @@
       } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
       import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-      // Firebase config
       const firebaseConfig = {
         apiKey: "AIzaSyD9ghRnC-TMJ-TV6TJxdGH_7qgRsT6Po04",
         authDomain: "project-d6110.firebaseapp.com",
@@ -246,7 +284,6 @@
         measurementId: "G-0ZLPYLVJ4Y",
       };
 
-      // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
       const db = getFirestore(app);
@@ -265,7 +302,6 @@
           dropdown.querySelector("a[href='profile.html']").style.display = '';
           const logoutBtn = dropdown.querySelector("#logoutBtn");
           if (logoutBtn) logoutBtn.style.display = '';
-          // Remove login link if present
           if (dropdown.querySelector('.login-link')) {
             dropdown.querySelector('.login-link').remove();
           }
@@ -274,7 +310,6 @@
           dropdown.querySelector("a[href='profile.html']").style.display = 'none';
           const logoutBtn = dropdown.querySelector("#logoutBtn");
           if (logoutBtn) logoutBtn.style.display = 'none';
-          // Add login link if not present
           if (!dropdown.querySelector(".login-link")) {
             const loginLink = document.createElement('a');
             loginLink.href = 'login.html';
@@ -287,7 +322,6 @@
       }
 
 
-      // Firebase Auth
       const auth = getAuth(app);
       window.currentUser = null;
       onAuthStateChanged(auth, (user) => {
@@ -303,7 +337,49 @@
         e.stopPropagation();
         document.getElementById("profileDropdown").classList.toggle("active");
       });
-            </script>
+
+(function() {
+  const addBtn = document.querySelector(".cli-addcart");
+  function updateCartCount() {
+    const countElem = document.getElementById('cartCount');
+    if (!countElem) return;
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalQty = cart.reduce((s, it) => s + (it.quantity || 0), 0);
+    countElem.textContent = totalQty;
+  }
+
+  updateCartCount();
+
+  if (addBtn) {
+    addBtn.addEventListener("click", async () => {
+      const productId = getProductIdFromUrl();
+      if (!productId) return;
+      const productRef = doc(db, "products", productId);
+      const productSnap = await getDoc(productRef);
+      if (!productSnap.exists()) return;
+      const product = productSnap.data();
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existing = cart.find(item => item.id === productId);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          id: productId,
+          name: product.Name || product.name,
+          brand: product.brand || "",
+          price: product.price || 0,
+          image: product.image || "./Assets/1.jpg",
+          quantity: 1
+        });
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+      console.log(`${product.Name || product.name} added to cart`);
+    });
+  }
+})();
+            
+        </script>
 
   </body>
   </html>

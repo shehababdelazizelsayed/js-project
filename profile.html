@@ -90,10 +90,17 @@
       <div class="user-info">
         <input
           type="text"
-          name="Username"
-          class="Username"
-          placeholder="Username"
-          value="Amr"
+          name="FirstName"
+          class="FirstName"
+          placeholder="First Name"
+          value=""
+        />
+        <input
+          type="text"
+          name="LastName"
+          class="LastName"
+          placeholder="Last Name"
+          value=""
         />
         <input
           type="email"
@@ -103,24 +110,16 @@
           value="amr@example.com"
         />
         <input
-          type="password"
-          name="old-Password"
-          class="old-Password"
-          placeholder="Old Password"
+          type="tel"
+          name="Phone"
+          class="Phone"
+          placeholder="Phone"
+          value=""
         />
-        <input
-          type="password"
-          name="Password"
-          class="Password"
-          placeholder="New Password"
-        />
-        <input
-          type="password"
-          name="confirm-Password"
-          class="confirm-Password"
-          placeholder="Confirm New Password"
-        />
-        <button type="submit" name="submit" class="submit">Update Info</button>
+        <div style="display:flex;gap:1rem;flex-direction:column;">
+          <button type="submit" name="submit" class="submit">Update Info</button>
+          <button type="button" id="resetPasswordBtn" class="submit" style="background:#ff6b6b">Reset Password</button>
+        </div>
       </div>
 
       <div class="previous-orders">
@@ -206,7 +205,6 @@
 
 
       document.addEventListener("DOMContentLoaded", () => {
-        // Logout button
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
           logoutBtn.addEventListener("click", async () => {
@@ -214,7 +212,7 @@
               await auth.signOut();
               window.location.href = "login.html";
             } catch (err) {
-              alert("Error signing out: " + err.message);
+              console.error("Error signing out:", err);
             }
           });
         }
@@ -233,10 +231,12 @@
         getFirestore,
         collection,
         getDocs,
+        doc,
+        getDoc,
+        setDoc,
       } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+      import { getAuth, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-      // Firebase config
       const firebaseConfig = {
         apiKey: "AIzaSyD9ghRnC-TMJ-TV6TJxdGH_7qgRsT6Po04",
         authDomain: "project-d6110.firebaseapp.com",
@@ -247,7 +247,6 @@
         measurementId: "G-0ZLPYLVJ4Y",
       };
 
-      // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
       const db = getFirestore(app);
@@ -266,7 +265,6 @@
           dropdown.querySelector("a[href='profile.html']").style.display = '';
           const logoutBtn = dropdown.querySelector("#logoutBtn");
           if (logoutBtn) logoutBtn.style.display = '';
-          // Remove login link if present
           if (dropdown.querySelector('.login-link')) {
             dropdown.querySelector('.login-link').remove();
           }
@@ -275,7 +273,6 @@
           dropdown.querySelector("a[href='profile.html']").style.display = 'none';
           const logoutBtn = dropdown.querySelector("#logoutBtn");
           if (logoutBtn) logoutBtn.style.display = 'none';
-          // Add login link if not present
           if (!dropdown.querySelector(".login-link")) {
             const loginLink = document.createElement('a');
             loginLink.href = 'login.html';
@@ -288,13 +285,102 @@
       }
 
 
-      // Firebase Auth
       const auth = getAuth(app);
       window.currentUser = null;
-      onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(auth, async (user) => {
         window.currentUser = user;
         updateProfileDropdown(user);
+        if (user) {
+          try {
+            const userRef = doc(db, 'users', user.uid);
+            const userSnap = await getDoc(userRef);
+            const emailInput = document.querySelector('.Email');
+            const nameHeader = document.querySelector('.Name');
+            const firstNameInput = document.querySelector('.FirstName');
+            const lastNameInput = document.querySelector('.LastName');
+            const phoneInput = document.querySelector('.Phone');
+
+            if (userSnap && userSnap.exists()) {
+              const data = userSnap.data();
+              if (emailInput) emailInput.value = data.email || user.email || '';
+              if (firstNameInput) firstNameInput.value = data.firstName || '';
+              if (lastNameInput) lastNameInput.value = data.lastName || '';
+              if (phoneInput) phoneInput.value = data.phone || '';
+              if (nameHeader) nameHeader.textContent = ((data.firstName || '') + ' ' + (data.lastName || '')).trim() || user.displayName || 'Account';
+            } else {
+              let pending = null;
+              try {
+                pending = JSON.parse(localStorage.getItem('pendingRegisteredUser'));
+              } catch (e) {
+                pending = null;
+              }
+              if (emailInput) emailInput.value = user.email || '';
+              if (firstNameInput) firstNameInput.value = (pending && pending.firstName) ? pending.firstName : '';
+              if (lastNameInput) lastNameInput.value = (pending && pending.lastName) ? pending.lastName : '';
+              if (phoneInput) phoneInput.value = (pending && pending.phone) ? pending.phone : '';
+              if (nameHeader) nameHeader.textContent = ((pending && ((pending.firstName || '') + ' ' + (pending.lastName || ''))) || user.displayName) || 'Account';
+            }
+          } catch (err) {
+            console.error('Failed to load profile:', err);
+          }
+        }
       });
+
+      const submitBtn = document.querySelector('.submit');
+      if (submitBtn) {
+        submitBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          if (!window.currentUser) {
+            console.warn('Please sign in to update your profile.');
+            return;
+          }
+          const uid = window.currentUser.uid;
+          const email = (document.querySelector('.Email') || {}).value || '';
+          const firstName = (document.querySelector('.FirstName') || {}).value || '';
+          const lastName = (document.querySelector('.LastName') || {}).value || '';
+          const phone = (document.querySelector('.Phone') || {}).value || '';
+          try {
+            await setDoc(doc(db, 'users', uid), { email, firstName, lastName, phone }, { merge: true });
+            const nameHeader = document.querySelector('.Name');
+            if (nameHeader) nameHeader.textContent = ((firstName || '') + ' ' + (lastName || '')).trim() || 'Account';
+            updateProfileDropdown(auth.currentUser);
+            try {
+              const pending = JSON.parse(localStorage.getItem('pendingRegisteredUser') || '{}');
+              pending.firstName = firstName;
+              pending.lastName = lastName;
+              pending.phone = phone;
+              localStorage.setItem('pendingRegisteredUser', JSON.stringify(pending));
+            } catch (e) {
+            }
+            console.log('Profile updated successfully.');
+          } catch (err) {
+            console.error('Error updating profile:', err);
+            try {
+              const fallback = { email, firstName, lastName, phone, savedAt: new Date().toISOString() };
+              localStorage.setItem('pendingProfileSave', JSON.stringify(fallback));
+            } catch (e) {}
+            console.error('Failed to update profile to server; changes saved locally.');
+          }
+        });
+      }
+
+      const resetBtn = document.getElementById('resetPasswordBtn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', async () => {
+          const email = (document.querySelector('.Email') || {}).value || '';
+          if (!email) {
+            console.warn('Please enter your email address in the Email field first.');
+            return;
+          }
+          try {
+            await sendPasswordResetEmail(auth, email);
+            console.log('Password reset email sent to ' + email);
+          } catch (err) {
+            console.error('Failed to send password reset email:', err);
+            console.error('Failed to send reset email:', (err.message || err));
+          }
+        });
+      }
 
       document.getElementById("profileBtn").addEventListener("click", function (e) {
         if (!window.currentUser) {

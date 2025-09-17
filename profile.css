@@ -8,6 +8,7 @@
 body {
   background-color: #f4f4f4;
   color: #1c2a33;
+  overflow-x: hidden;
 }
 
 .main-Conatiner {
@@ -56,6 +57,36 @@ body {
   font-size: 1em;
   outline: none;
   transition: all 0.3s;
+}
+
+
+.FirstName,
+.LastName,
+.Phone {
+  margin-left: 0;
+  width: 100%;
+  padding: 1em;
+  margin-bottom: 1.5em;
+  border-radius: 0.5em;
+  border: 1px solid #e0e0e0;
+  background-color: #f4f4f4;
+  color: #1c2a33;
+  font-size: 1em;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.FirstName::placeholder,
+.LastName::placeholder,
+.Phone::placeholder {
+  color: #878787;
+}
+
+.FirstName:focus,
+.LastName:focus,
+.Phone:focus {
+  border-color: #3fa7a7;
+  box-shadow: 0 0 5px rgba(63, 167, 167, 0.5);
 }
 
 .Username::placeholder,

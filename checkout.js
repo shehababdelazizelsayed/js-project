@@ -26,14 +26,14 @@ function renderCheckoutCart() {
     tbody.appendChild(row);
   });
 
-  // Update totals in totals-box
+  
   const totalBox = document.querySelector(".totals-box");
   if (totalBox) {
-    // Use localStorage finalTotal if available, else use calculated
+    
     let finalTotal = localStorage.getItem("finalTotal");
     if (!finalTotal) finalTotal = fullTotal;
     totalBox.querySelector("p span").textContent = `${fullTotal} EGP`;
-    // Shipment is assumed to be 20 EGP as before
+    
     const shipment = 20;
     totalBox.querySelector(
       "p:nth-child(2) span"
@@ -48,10 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCheckoutCart();
 });
 
-// Confirm button logic (if present)
+
 const confirmBtn = document.querySelector(".confirm-btn");
 if (confirmBtn) {
   confirmBtn.addEventListener("click", () => {
-    alert("Thank you! Your order has been confirmed.");
+    console.log("Thank you! Your order has been confirmed.");
   });
 }
