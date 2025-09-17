@@ -49,9 +49,47 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+// const confirmBtn = document.querySelector(".confirm-btn");
+// if (confirmBtn) {
+//   confirmBtn.addEventListener("click", () => {
+//     console.log("Thank you! Your order has been confirmed.");
+//   });
+// }
+
+
+// ===================== payment =====================
 const confirmBtn = document.querySelector(".confirm-btn");
 if (confirmBtn) {
   confirmBtn.addEventListener("click", () => {
-    console.log("Thank you! Your order has been confirmed.");
+    const method = document.querySelector('input[name="payment"]:checked').value;
+
+    if (method === "cod") {
+      alert("Order placed with Cash on Delivery!");
+      return;
+    }
+
+    if (method === "card") {
+      document.querySelector(".confirm-order").innerHTML = `<div id="paypal-button-container"></div>`;
+
+      paypal.Buttons({
+        createOrder: function (data, actions) {
+          const totalText = document.querySelector(".totals-box strong span").textContent;
+          const totalNumber = parseFloat(totalText.replace(/[^\d.]/g, ""));
+          return actions.order.create({
+            purchase_units: [
+              {
+                amount: { value: totalNumber.toString() }
+              }
+            ]
+          });
+        },
+        onApprove: function (data, actions) {
+         window.location.href = "success.html";
+        },
+        onCancel: function () {
+          window.location.href = "cancel.html";
+        }
+      }).render("#paypal-button-container");
+    }
   });
 }
