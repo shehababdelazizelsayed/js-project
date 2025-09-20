@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="topbar_style.css" />
   </head>
   <body>
-  <body>
     <div class="main-Conatiner">
       <div class="Top-Bar">
         <img
@@ -46,9 +45,24 @@
               <i class="fa fa-user" style="font-size: 28px"></i>
             </button>
             <div class="profile-dropdown" id="profileDropdown">
-              <p class="profile-email">None</p><br />
+              <p class="profile-email">None</p>
+              <br />
               <a href="profile.html">My Profile</a><br />
-              <button id="logoutBtn" style="background:none;border:none;color:#1c2a33;cursor:pointer;padding:0;margin:0;text-align:center;width:100%">Logout</button>
+              <button
+                id="logoutBtn"
+                style="
+                  background: none;
+                  border: none;
+                  color: #1c2a33;
+                  cursor: pointer;
+                  padding: 0;
+                  margin: 0;
+                  text-align: center;
+                  width: 100%;
+                "
+              >
+                Logout
+              </button>
             </div>
           </div>
           <button
@@ -59,8 +73,7 @@
             id="cartBtn"
           >
             <i class="fa fa-shopping-cart" style="font-size: 22px"></i>
-                          <span id="cartCount" class="cart-count">0</span>
-
+            <span id="cartCount" class="cart-count">0</span>
           </button>
         </div>
 
@@ -82,7 +95,6 @@
           </div>
         </div>
       </div>
-
 
       <h1 class="Header">Checkout</h1>
 
@@ -107,41 +119,11 @@
             <th>Total Price</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>Product A</td>
-            <td>C</td>
-            <td>
-              <div class="quantity-control">
-                <button>-</button>
-                <input type="text" value="1" />
-                <button>+</button>
-                <button class="delete-btn">Delete</button>
-              </div>
-            </td>
-            <td>100</td>
-            <td>100</td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>Product B</td>
-            <td>D</td>
-            <td>
-              <div class="quantity-control">
-                <button>-</button>
-                <input type="text" value="1" />
-                <button>+</button>
-                <button class="delete-btn">Delete</button>
-              </div>
-            </td>
-            <td>200</td>
-            <td>200</td>
-          </tr>
+        <tbody id="checkoutTableBody">
+          <!-- Cart items will be loaded dynamically -->
         </tbody>
       </table>
 
-      
       <div class="totals-box">
         <p>Total product price: <span>$300</span></p>
         <p>Shipment: <span>$20</span></p>
@@ -150,7 +132,6 @@
         </p>
       </div>
 
-      
       <div class="checkout-box">
         <h2>Payment Method</h2>
         <form
@@ -175,18 +156,15 @@
         </form>
       </div>
 
-      
       <div class="checkout-box">
         <h2>Comments</h2>
         <textarea placeholder="Any notes about delivery..."></textarea>
       </div>
 
-      
       <div class="confirm-order">
         <button class="confirm-btn">Confirm Order</button>
       </div>
 
-      
       <div class="footer">
         <div class="feet-contact">
           <ul class="foot-contact">
@@ -217,12 +195,10 @@
       </div>
       <div class="Copywrite">&copy; 2025 Team 0. All rights reserved.</div>
     </div>
+    <script src="https://www.paypal.com/sdk/js?client-id=AQdbt8wKmeJbBuyYF4XVn8RKlR96Cdw2jEu808JQ6xGf9S-H6PZx1BevZlaX5FE89RW-o2lXK69qtMqh"></script>
     <script src="checkout.js"></script>
-    <script src="main.js"></script>
-        <script src="./topbar_js.js"></script>
-        <script type="module">
-
-
+    <script src="./topbar_js.js"></script>
+    <script type="module">
       document.addEventListener("DOMContentLoaded", () => {
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
@@ -236,10 +212,11 @@
           });
         }
 
-
         document.addEventListener("click", function (event) {
           if (!event.target.closest(".profile-wrapper")) {
-            document.getElementById("profileDropdown").classList.remove("active");
+            document
+              .getElementById("profileDropdown")
+              .classList.remove("active");
           }
         });
       });
@@ -251,7 +228,10 @@
         collection,
         getDocs,
       } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyD9ghRnC-TMJ-TV6TJxdGH_7qgRsT6Po04",
@@ -278,28 +258,28 @@
         }
         if (user && user.email) {
           emailElem.textContent = user.email;
-          dropdown.querySelector("a[href='profile.html']").style.display = '';
+          dropdown.querySelector("a[href='profile.html']").style.display = "";
           const logoutBtn = dropdown.querySelector("#logoutBtn");
-          if (logoutBtn) logoutBtn.style.display = '';
-          if (dropdown.querySelector('.login-link')) {
-            dropdown.querySelector('.login-link').remove();
+          if (logoutBtn) logoutBtn.style.display = "";
+          if (dropdown.querySelector(".login-link")) {
+            dropdown.querySelector(".login-link").remove();
           }
         } else {
           emailElem.textContent = "Not logged in";
-          dropdown.querySelector("a[href='profile.html']").style.display = 'none';
+          dropdown.querySelector("a[href='profile.html']").style.display =
+            "none";
           const logoutBtn = dropdown.querySelector("#logoutBtn");
-          if (logoutBtn) logoutBtn.style.display = 'none';
+          if (logoutBtn) logoutBtn.style.display = "none";
           if (!dropdown.querySelector(".login-link")) {
-            const loginLink = document.createElement('a');
-            loginLink.href = 'login.html';
-            loginLink.textContent = 'Login';
-            loginLink.className = 'login-link';
-            loginLink.style.display = 'block';
+            const loginLink = document.createElement("a");
+            loginLink.href = "login.html";
+            loginLink.textContent = "Login";
+            loginLink.className = "login-link";
+            loginLink.style.display = "block";
             dropdown.appendChild(loginLink);
           }
         }
       }
-
 
       const auth = getAuth(app);
       window.currentUser = null;
@@ -308,14 +288,16 @@
         updateProfileDropdown(user);
       });
 
-      document.getElementById("profileBtn").addEventListener("click", function (e) {
-        if (!window.currentUser) {
-          window.location.href = "login.html";
-          return;
-        }
-        e.stopPropagation();
-        document.getElementById("profileDropdown").classList.toggle("active");
-      });
-      </script>
+      document
+        .getElementById("profileBtn")
+        .addEventListener("click", function (e) {
+          if (!window.currentUser) {
+            window.location.href = "login.html";
+            return;
+          }
+          e.stopPropagation();
+          document.getElementById("profileDropdown").classList.toggle("active");
+        });
+    </script>
   </body>
 </html>

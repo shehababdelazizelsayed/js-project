@@ -134,6 +134,16 @@ body {
   margin-bottom: 0.6em;
 }
 
+.price-row:nth-child(5) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.price-row:nth-child(5) .label {
+  margin-bottom: 0.3em;
+}
+
 .related-list {
   display: flex;
   flex-direction: column;

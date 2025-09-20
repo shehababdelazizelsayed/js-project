@@ -14,12 +14,17 @@ function updateCartTotals() {
       parseFloat(unitPriceCell.textContent.replace(/[^0-9.]/g, "")) || 0;
     const total = qty * unitPrice;
 
-    totalPriceCell.textContent = "$" + total.toFixed(2);
+    totalPriceCell.textContent = total.toFixed(2) + " EGP";
     finalTotal += total;
   });
 
-  document.querySelector(".checkout-box span:last-child").textContent =
-    "$" + finalTotal.toFixed(2);
+  const checkoutBox = document.querySelector(".checkout-box");
+  if (checkoutBox) {
+    const totalSpan = checkoutBox.querySelector("strong span");
+    if (totalSpan) {
+      totalSpan.textContent = finalTotal.toFixed(2) + " EGP";
+    }
+  }
 }
 
 document.addEventListener("click", function (e) {

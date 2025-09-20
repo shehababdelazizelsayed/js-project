@@ -23,9 +23,7 @@ document.addEventListener("click", function (event) {
   }
 });
 
-function redirectToProfile() {
-  window.location.href = "./profile.html";
-}
+
 
 const cartBtn = document.getElementById("cartBtn");
 if (cartBtn) {
@@ -61,7 +59,7 @@ document.addEventListener("DOMContentLoaded", updateCartCount);
 
 document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.querySelector(
-    '#searchInput, .search-input, .searchbox, input[name="q"], input[type="search"], input.search'
+    '#searchInput, .search-input, .searchbox, input[name="Search-bar"], input[name="q"], input[type="search"], input.search'
   );
   const searchBtn = document.querySelector(
     '#searchBtn, .search-btn, .search-icon, button[type="submit"], .btn-search'

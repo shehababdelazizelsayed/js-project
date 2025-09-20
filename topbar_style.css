@@ -93,6 +93,15 @@
   align-items: center;
   gap: 0.8em;
 }
+#logoutBtn {
+  background:none;
+  border:none;color:#1c2a33;
+  cursor:pointer;
+  padding:0;
+  margin:0;
+  text-align:center;
+  width:100%
+}
 
 .button-container {
   display: flex;
