@@ -11,7 +11,6 @@
     />
     <link rel="stylesheet" href="topbar_style.css" />
   </head>
-  <sc>
   <body>
     <div class="main-Conatiner">
       <div class="Top-Bar">
@@ -46,9 +45,24 @@
               <i class="fa fa-user" style="font-size: 28px"></i>
             </button>
             <div class="profile-dropdown" id="profileDropdown">
-              <p class="profile-email">None</p><br />
+              <p class="profile-email">None</p>
+              <br />
               <a href="profile.html">My Profile</a><br />
-              <button id="logoutBtn" style="background:none;border:none;color:#1c2a33;cursor:pointer;padding:0;margin:0;text-align:center;width:100%">Logout</button>
+              <button
+                id="logoutBtn"
+                style="
+                  background: none;
+                  border: none;
+                  color: #1c2a33;
+                  cursor: pointer;
+                  padding: 0;
+                  margin: 0;
+                  text-align: center;
+                  width: 100%;
+                "
+              >
+                Logout
+              </button>
             </div>
           </div>
           <button
@@ -59,8 +73,7 @@
             id="cartBtn"
           >
             <i class="fa fa-shopping-cart" style="font-size: 22px"></i>
-                          <span id="cartCount" class="cart-count">0</span>
-
+            <span id="cartCount" class="cart-count">0</span>
           </button>
         </div>
 
@@ -83,17 +96,21 @@
         </div>
       </div>
 
-
       <h1 class="Header">Register Form</h1>
 
       <div class="register-container">
         <form class="register-form">
           <fieldset>
             <legend>Personal Info</legend>
-            <input type="text" placeholder="First Name" required />
-            <input type="text" placeholder="Last Name" required />
-            <input type="email" placeholder="Email" required />
-            <input type="tel" placeholder="Phone" />
+            <input
+              id="firstName"
+              type="text"
+              placeholder="First Name"
+              required
+            />
+            <input id="lastName" type="text" placeholder="Last Name" required />
+            <input id="emailInput" type="email" placeholder="Email" required />
+            <input id="phone" type="tel" placeholder="Phone" required />
           </fieldset>
 
           <fieldset>
@@ -117,19 +134,16 @@
             </div>
           </fieldset>
 
-          <!-- Terms -->
           <div class="terms">
             <label>
               <input type="checkbox" required /> I agree to terms and services
             </label>
           </div>
 
-          <!-- Submit -->
           <button type="submit" class="register-btn">Register</button>
         </form>
       </div>
 
-      <!-- Footer -->
       <div class="footer">
         <div class="feet-contact">
           <ul class="foot-contact">
@@ -162,24 +176,25 @@
     </div>
 
     <script src="register.js"></script>
-        <script src="./topbar_js.js"></script>
+    <script src="./topbar_js.js"></script>
 
-
-<script type="module">
+   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-analytics.js";
   import {
     getFirestore,
     collection,
     getDocs,
+    setDoc,
+    doc,
   } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
   import {
     getAuth,
     createUserWithEmailAndPassword,
+    sendEmailVerification,
     onAuthStateChanged,
   } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
-  // ✅ Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyD9ghRnC-TMJ-TV6TJxdGH_7qgRsT6Po04",
     authDomain: "project-d6110.firebaseapp.com",
@@ -190,36 +205,57 @@
     measurementId: "G-0ZLPYLVJ4Y",
   };
 
-  // ✅ Init Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const db = getFirestore(app);
   const auth = getAuth(app);
 
-  // ✅ Handle Register Form
   const form = document.querySelector(".register-form");
+
   if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const email = form.querySelector('input[type="email"]').value;
+      const firstName = form.querySelector("#firstName")?.value || "";
+      const lastName = form.querySelector("#lastName")?.value || "";
+      const phone = form.querySelector("#phone")?.value || "";
       const password = form.querySelectorAll('input[type="password"]')[0].value;
       const confirmPassword = form.querySelectorAll('input[type="password"]')[1].value;
 
       if (password !== confirmPassword) {
-        alert("⚠️ Passwords do not match!");
+        alert("Passwords do not match.");
         return;
       }
 
       try {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await sendEmailVerification(user);
+
+        const uid = user.uid;
+        await setDoc(doc(db, "users", uid), {
+          firstName,
+          lastName,
+          phone,
+          email,
+          createdAt: new Date().toISOString(),
+        });
+
+        alert("Your account has been created! Please check your email to activate your account.");
         window.location.href = "login.html";
       } catch (error) {
-        alert("❌ Error: " + error.message);
+        if (error.code === "auth/email-already-in-use") {
+          alert("This email is already in use.");
+        } else {
+          console.error("Registration error:", error);
+          alert("Registration failed.");
+        }
       }
     });
   }
 
-  // ✅ Update profile dropdown
   function updateProfileDropdown(user) {
     const dropdown = document.getElementById("profileDropdown");
     if (!dropdown) return;
@@ -255,14 +291,12 @@
     }
   }
 
-  // ✅ Auth state
   window.currentUser = null;
   onAuthStateChanged(auth, (user) => {
     window.currentUser = user;
     updateProfileDropdown(user);
   });
 
-  // ✅ Logout + dropdown logic
   document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
@@ -271,12 +305,11 @@
           await auth.signOut();
           window.location.href = "login.html";
         } catch (err) {
-          alert("Error signing out: " + err.message);
+          console.error("Error signing out:", err);
         }
       });
     }
 
-    // Hide dropdown if clicking outside
     document.addEventListener("click", function (event) {
       if (!event.target.closest(".profile-wrapper")) {
         document.getElementById("profileDropdown").classList.remove("active");
@@ -296,7 +329,5 @@
     }
   });
 </script>
-
-
   </body>
 </html>
